@@ -1,13 +1,13 @@
 import numpy as np
 import torch
-def load_data(label, train=False, val=False, test=False):
+def load_data(label, k=1, train=False, val=False, test=False):
     loaded_datasets = []
     if train:
-        loaded_datasets.append(np.load(f'clean_data/{label}_train.npy'))
+        loaded_datasets.append(np.load(f'clean_data_k{k}/{label}_train.npy'))
     if val:
-        loaded_datasets.append(np.load(f'clean_data/{label}_val.npy'))
+        loaded_datasets.append(np.load(f'clean_data_k{k}/{label}_val.npy'))
     if test:
-        loaded_datasets.append(np.load(f'clean_data/{label}_test.npy'))
+        loaded_datasets.append(np.load(f'clean_data_k{k}/{label}_test.npy'))
 
     return tuple(loaded_datasets)
 
@@ -16,9 +16,9 @@ def unison_shuffled_copies(a, b):
     p = np.random.permutation(len(a))
     return a[p], b[p]
 
-def process_train_data():
-    accessible_train, accessible_val = load_data('accessible', train=True, val=True)
-    not_accessible_train, not_accessible_val = load_data('notaccessible', train=True, val=True)
+def process_train_data(k=1):
+    accessible_train, accessible_val = load_data('accessible', k=k, train=True, val=True)
+    not_accessible_train, not_accessible_val = load_data('notaccessible', k=k, train=True, val=True)
 
     # accessible_train = np.tile(accessible_train, (10, 1))
     # accessible_val = np.tile(accessible_val, (10, 1))

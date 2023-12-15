@@ -45,7 +45,7 @@ def create_submission(submission_predictions):
             file.write(seq_to_id[p] + '\n')
 
 
-seq_test = np.load('clean_data/test.npy')
+seq_test = np.load('clean_data_k1/test.npy')
 seq_test = torch.from_numpy(seq_test).to(device)
 
 # Perform inference in batches of size 100
