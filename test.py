@@ -6,17 +6,18 @@ from tqdm import tqdm
 
 
 from helpers import process_test_data, top_k_accuracy
-from model6 import model2
+from model_k6 import model2
 
 device = 'cuda:1'
+k = 3
 
-seq_test, labels_test = process_test_data()
+seq_test, labels_test = process_test_data(k=k)
 
 seq_test = torch.from_numpy(seq_test).int().to(device)
 labels_test = torch.from_numpy(labels_test).float().to(device)
 
-model = model2(device)
-model.load_state_dict(torch.load('models/model3_3_epoch71_0.6336.pt'))
+model = model2(device, kmers=k)
+model.load_state_dict(torch.load('models/k3_model_epoch15_0.6408.pt'))
 model.to(device)
 model.eval()
 

@@ -6,10 +6,13 @@ from tqdm import tqdm
 from sklearn.metrics import f1_score
 
 from helpers import process_train_data, calculate_weights, top_k_accuracy
-from model6 import model2
+from model_k6 import model2
+
+
+k = 3
 
 device = 'cuda:1'
-trial_name = 'random_hyper'
+trial_name = 'k3_model'
 batch_size = 512
 learning_rate = .001
 n_epochs = 100
@@ -18,7 +21,7 @@ n_epochs = 100
 # learning_rate = .0003
 # n_epochs = 100
 
-seq_train, labels_train, seq_val, labels_val = process_train_data(k=3)
+seq_train, labels_train, seq_val, labels_val = process_train_data(k=k)
 # Convert the numpy arrays to PyTorch tensors
 seq_train = torch.from_numpy(seq_train).int().to(device)
 seq_test = torch.from_numpy(seq_val).int().to(device)
@@ -35,7 +38,7 @@ val_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
 
 # Model
-model = model2(device)
+model = model2(device, kmers=k)
 model.to(device)
 criterion = nn.BCELoss(reduction='none')
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)

@@ -5,22 +5,27 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from model6 import model2
-from maps import single_map
+from model_k6 import model2
+from maps import get_kmer_map
 
 device = 'cuda:1'
-submission_num = 6
+k = 3
+submission_num = 8
 
-model = model2(device)
+model = model2(device, kmers=k)
 model.to(device)
-model.load_state_dict(torch.load('models/model3_3_epoch71_0.6336.pt'))
+model.load_state_dict(torch.load('models/k3_model_epoch15_0.6408.pt'))
 model.eval()
 
 def create_seq_file(seq_test, top_indices):
+    kmer_map = get_kmer_map(k=k, inverse=True)
     sequence_predictions = []
     with open(f'submission_sequences/predictions{submission_num}.csv', 'w') as file:
         for idx in tqdm(top_indices):
-            seq = "".join([single_map[i.item()] for i in seq_test[idx]])
+            seq = ''
+
+            seq = "".join([kmer_map[i.item()][0] for i in seq_test[idx][:-1]])
+            seq += kmer_map[seq_test[idx, -1].item()]
             file.write(seq + "\n")
             sequence_predictions.append(seq)
     return sequence_predictions
@@ -45,7 +50,7 @@ def create_submission(submission_predictions):
             file.write(seq_to_id[p] + '\n')
 
 
-seq_test = np.load('clean_data_k1/test.npy')
+seq_test = np.load(f'clean_data_k{k}/test.npy')
 seq_test = torch.from_numpy(seq_test).to(device)
 
 # Perform inference in batches of size 100
