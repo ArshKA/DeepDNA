@@ -39,9 +39,9 @@ def process_train_data(k=1):
 
     return seq_train, lab_train, seq_val, lab_val
 
-def process_test_data():
-    accessible_test = load_data('accessible', test=True)[0]
-    not_accessible_test = load_data('notaccessible', test=True)[0]
+def process_test_data(k=1):
+    accessible_test = load_data('accessible', test=True, k=k)[0]
+    not_accessible_test = load_data('notaccessible', test=True, k=k)[0]
 
     seq_test = np.concatenate([accessible_test, not_accessible_test])
 
